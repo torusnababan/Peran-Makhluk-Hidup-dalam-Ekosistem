@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis IPA: Peran Makhluk Hidup dalam Ekosistem</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: auto;
+            position: relative;
+        }
+        .header-main-title {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        h1 {
+            color: #0056b3;
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .author-info {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+        .author-info p {
+            margin: 0;
+            font-size: 0.9em;
+            color: #555;
+        }
+        .author-info p:first-child {
+            font-weight: bold;
+            color: #333;
+            font-size: 1em;
+        }
+        .header-image {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #0056b3;
+            z-index: 10;
+        }
+        .left-header-image {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 2px solid #0056b3;
+            z-index: 10;
+        }
+        h2 {
+            color: #0056b3;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"], select {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .question {
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .question p {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .options label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: normal;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #timer {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #d9534f;
+            margin-bottom: 15px;
+            text-align: right;
+        }
+        #timeLimitDisplay {
+            text-align: right;
+            font-weight: bold;
+            margin-bottom: 5px;
+            margin-top: 50px;
+        }
+        #results {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #e9ecef;
+            display: none;
+        }
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+        .incorrect {
+            color: red;
+            font-weight: bold;
+        }
+        .cooldown-message {
+            text-align: center;
+            font-size: 1.2em;
+            color: #d9534f;
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #d9534f;
+            border-radius: 5px;
+            background-color: #ffe0e0;
+        }
+        @media (max-width: 600px) {
+            .header-image, .left-header-image {
+                position: static;
+                margin: 10px auto;
+                display: block;
+            }
+            .header-main-title, .author-info {
+                text-align: center;
+            }
+            .container {
+                position: static;
+            }
+            #timeLimitDisplay {
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-main-title">
+            <h1>Kuis IPA: Peran Makhluk Hidup dalam Ekosistem</h1>
+        </div>
+        <div class="author-info">
+            <p>By. Torus Manuntun Nababan, S.Pd.,M.Pd</p>
+            <p>(Pengembang Soal Kuis)</p>
+        </div>
+        <img src="logo.png" alt="Foto Torus Manuntun Nababan, S.Pd.,M.Pd" class="header-image">
+        <img src="jas.jpg" alt="Ilustrasi Jas" class="left-header-image">
+
+        <p id="timeLimitDisplay">Waktu pengerjaan: <span id="timeLimit">30</span> menit</p>
+        <div id="timer">Waktu tersisa: 30:00</div>
+
+        <form id="quizForm">
+            <h2>Identitas Siswa</h2>
+            <div class="form-group">
+                <label for="sekolah">Nama Sekolah:</label>
+                <input type="text" id="sekolah" name="sekolah" required>
+            </div>
+            <div class="form-group">
+                <label for="nama">Nama Siswa:</label>
+                <input type="text" id="nama" name="nama" required>
+            </div>
+            <div class="form-group">
+                <label for="kelas">Kelas:</label>
+                <input type="text" id="kelas" name="kelas" required>
+            </div>
+            <div class="form-group">
+                <label for="semester">Semester:</label>
+                <select id="semester" name="semester" required>
+                    <option value="">Pilih Semester</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="tahunAjaran">Tahun Ajaran:</label>
+                <input type="text" id="tahunAjaran" name="tahunAjaran" placeholder="Contoh: 2024/2025" required>
+            </div>
+
+            <hr>
+
+            <h2>Soal Kuis</h2>
+            <div id="questionsContainer">
+                </div>
+
+            <button type="submit">Selesai Kuis</button>
+        </form>
+
+        <div id="results">
+            <h2>Hasil Kuis</h2>
+            <p><strong>Nama Siswa:</strong> <span id="resultNama"></span></p>
+            <p><strong>Skor Anda:</strong> <span id="score"></span></p>
+            <p id="message"></p>
+            <h3>Detail Jawaban:</h3>
+            <div id="answerDetails">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            // Produsen (4 soal)
+            {
+                topic: "Produsen",
+                question: "Makhluk hidup di ekosistem yang bisa membuat makanannya sendiri, biasanya melalui fotosintesis, disebut...",
+                options: ["Konsumen", "Dekomposer", "Produsen", "Predator"],
+                answer: "Produsen"
+            },
+            {
+                topic: "Produsen",
+                question: "Contoh produsen dalam ekosistem adalah...",
+                options: ["Tumbuhan hijau", "Hewan pemakan rumput", "Jamur", "Bakteri"],
+                answer: "Tumbuhan hijau"
+            },
+            {
+                topic: "Produsen",
+                question: "Peran utama produsen dalam ekosistem adalah sebagai...",
+                options: ["Pemangsa", "Sumber energi awal", "Pengurai", "Penangkap makanan"],
+                answer: "Sumber energi awal"
+            },
+            {
+                topic: "Produsen",
+                question: "Jika ada pohon di kebun sekolah, pohon tersebut berperan sebagai...",
+                options: ["Konsumen tingkat 1", "Produsen", "Dekomposer", "Herbivora"],
+                answer: "Produsen"
+            },
+            
+            // Konsumen (4 soal)
+            {
+                topic: "Konsumen",
+                question: "Makhluk hidup yang mendapatkan energi dengan cara memakan makhluk hidup lain disebut...",
+                options: ["Produsen", "Dekomposer", "Konsumen", "Herbivora"],
+                answer: "Konsumen"
+            },
+            {
+                topic: "Konsumen",
+                question: "Kelinci yang memakan wortel berperan sebagai...",
+                options: ["Produsen", "Konsumen primer (Konsumen tingkat 1)", "Dekomposer", "Predator"],
+                answer: "Konsumen primer (Konsumen tingkat 1)"
+            },
+            {
+                topic: "Konsumen",
+                question: "Hewan yang hanya memakan tumbuhan disebut...",
+                options: ["Karnivora", "Herbivora", "Omnivora", "Dekomposer"],
+                answer: "Herbivora"
+            },
+            {
+                topic: "Konsumen",
+                question: "Jika seekor ular memakan katak, ular tersebut berperan sebagai konsumen...",
+                options: ["Tingkat 1", "Tingkat 2", "Tingkat 3", "Produsen"],
+                answer: "Tingkat 2"
+            },
+            
+            // Dekomposer (4 soal)
+            {
+                topic: "Dekomposer",
+                question: "Peran makhluk hidup yang menguraikan sisa-sisa organisme mati menjadi zat-zat yang lebih sederhana disebut...",
+                options: ["Produsen", "Konsumen", "Dekomposer (Pengurai)", "Predator"],
+                answer: "Dekomposer (Pengurai)"
+            },
+            {
+                topic: "Dekomposer",
+                question: "Contoh dekomposer yang paling umum adalah...",
+                options: ["Tikus", "Burung", "Jamur dan bakteri", "Kucing"],
+                answer: "Jamur dan bakteri"
+            },
+            {
+                topic: "Dekomposer",
+                question: "Proses yang dilakukan oleh dekomposer sangat penting untuk...",
+                options: ["Menciptakan oksigen", "Memindahkan energi", "Mengembalikan nutrisi ke tanah", "Menyediakan air"],
+                answer: "Mengembalikan nutrisi ke tanah"
+            },
+            {
+                topic: "Dekomposer",
+                question: "Ketika daun kering jatuh ke tanah dan membusuk, siapa yang berperan utama dalam proses pembusukan?",
+                options: ["Produsen", "Konsumen", "Dekomposer", "Predator"],
+                answer: "Dekomposer"
+            },
+            
+            // Rantai Makanan (4 soal)
+            {
+                topic: "Rantai Makanan",
+                question: "Urutan perpindahan energi dari satu makhluk hidup ke makhluk hidup lain melalui proses makan dan dimakan disebut...",
+                options: ["Jaring-jaring makanan", "Daur hidup", "Rantai makanan", "Siklus air"],
+                answer: "Rantai makanan"
+            },
+            {
+                topic: "Rantai Makanan",
+                question: "Dalam rantai makanan: Rumput → Kelinci → Elang. Siapakah yang bertindak sebagai konsumen tingkat 1?",
+                options: ["Rumput", "Kelinci", "Elang", "Tidak ada"],
+                answer: "Kelinci"
+            },
+            {
+                topic: "Rantai Makanan",
+                question: "Dalam rantai makanan di sawah, padi dimakan oleh tikus, tikus dimakan oleh ular, dan ular dimakan oleh elang. Padi berperan sebagai...",
+                options: ["Konsumen", "Dekomposer", "Produsen", "Predator"],
+                answer: "Produsen"
+            },
+            {
+                topic: "Rantai Makanan",
+                question: "Aliran energi dalam rantai makanan selalu dimulai dari...",
+                options: ["Konsumen", "Dekomposer", "Produsen", "Predator"],
+                answer: "Produsen"
+            },
+            
+            // Jaring-jaring Makanan (4 soal)
+            {
+                topic: "Jaring-jaring Makanan",
+                question: "Kumpulan dari beberapa rantai makanan yang saling berhubungan dalam ekosistem disebut...",
+                options: ["Rantai makanan", "Jaring-jaring makanan", "Siklus energi", "Piramida makanan"],
+                answer: "Jaring-jaring makanan"
+            },
+            {
+                topic: "Jaring-jaring Makanan",
+                question: "Mengapa jaring-jaring makanan lebih kompleks daripada rantai makanan?",
+                options: ["Karena hanya ada satu jenis hewan", "Karena ada banyak pilihan makanan", "Karena tidak ada produsen", "Karena lebih sedikit energi yang berpindah"],
+                answer: "Karena ada banyak pilihan makanan"
+            },
+            {
+                topic: "Jaring-jaring Makanan",
+                question: "Dalam jaring-jaring makanan, satu hewan bisa menjadi makanan bagi...",
+                options: ["Hanya satu jenis hewan", "Banyak jenis hewan lain", "Tidak ada hewan lain", "Hanya tumbuhan"],
+                answer: "Banyak jenis hewan lain"
+            },
+            {
+                topic: "Jaring-jaring Makanan",
+                question: "Jika seekor burung memakan ulat, dan burung tersebut juga memakan biji-bijian, ini adalah contoh dari...",
+                options: ["Rantai makanan", "Jaring-jaring makanan", "Siklus energi", "Dekomposisi"],
+                answer: "Jaring-jaring makanan"
+            }
+        ];
+
+        const timeLimitInMinutes = 30; 
+        let timeLeft = timeLimitInMinutes * 60; // seconds
+        let timerInterval;
+
+        const quizForm = document.getElementById('quizForm');
+        const questionsContainer = document.getElementById('questionsContainer');
+        const timerDisplay = document.getElementById('timer');
+        const resultsDiv = document.getElementById('results');
+        const resultNama = document.getElementById('resultNama');
+        const scoreDisplay = document.getElementById('score');
+        const messageDisplay = document.getElementById('message');
+        const answerDetailsDiv = document.getElementById('answerDetails');
+
+        // Durasi cooldown: 1 jam dalam milidetik
+        const cooldownDuration = 60 * 60 * 1000;
+        const lastQuizCompletionKey = 'lastQuizCompletionTime';
+
+        // Fungsi untuk mengacak array (algoritma Fisher-Yates)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // Fungsi untuk menghasilkan dan menampilkan pertanyaan
+        function generateQuestions() {
+            // Pastikan jumlah soal adalah 20
+            if (questions.length !== 20) {
+                console.error("Jumlah soal tidak sesuai (harus 20).");
+            }
+            
+            shuffleArray(questions);
+            questionsContainer.innerHTML = '';
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('question');
+
+                const shuffledOptions = [...q.options];
+                shuffleArray(shuffledOptions);
+
+                questionDiv.innerHTML = `
+                    <p>${index + 1}. ${q.question}</p>
+                    <div class="options">
+                        ${shuffledOptions.map((option) => `
+                            <label>
+                                <input type="radio" name="q${index}" value="${option}"> ${option}
+                            </label>
+                        `).join('')}
+                    </div>
+                `;
+                questionsContainer.appendChild(questionDiv);
+            });
+        }
+
+        // Fungsi untuk memulai timer
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerDisplay.textContent = `Waktu tersisa: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Waktu habis! Kuis akan otomatis disubmit.");
+                    quizForm.dispatchEvent(new Event('submit'));
+                }
+                timeLeft--;
+            }, 1000);
+        }
+
+        // Penanganan saat formulir disubmit
+        quizForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            clearInterval(timerInterval);
+
+            let totalScore = 0;
+            const pointsPerCorrect = 5; // 5 poin per soal
+            const maxPossibleScore = questions.length * pointsPerCorrect; // 20 * 5 = 100
+
+            const answers = {};
+
+            questions.forEach((q, index) => {
+                const selectedOption = document.querySelector(`input[name="q${index}"]:checked`);
+                const userAnswer = selectedOption ? selectedOption.value : null;
+                answers[`q${index}`] = userAnswer;
+
+                if (userAnswer === q.answer) {
+                    totalScore += pointsPerCorrect;
+                }
+            });
+
+            // Simpan waktu penyelesaian kuis ke Local Storage
+            localStorage.setItem(lastQuizCompletionKey, Date.now());
+
+            // Tampilkan hasil
+            resultNama.textContent = document.getElementById('nama').value;
+            scoreDisplay.textContent = `${totalScore} / ${maxPossibleScore}`;
+
+            // Tentukan pesan berdasarkan skor
+            // Nilai Pemenang ditentukan oleh skor >= 70
+            if (totalScore >= 70) { 
+                messageDisplay.textContent = "Selamat Anda Pemenang";
+                messageDisplay.style.color = "green";
+            } else {
+                messageDisplay.textContent = "Anda Belum Beruntung, Belajar Lagi Ya";
+                messageDisplay.style.color = "red";
+            }
+
+            // Tampilkan detail jawaban
+            answerDetailsDiv.innerHTML = '';
+            questions.forEach((q, index) => {
+                const userAnswer = answers[`q${index}`];
+                const detailDiv = document.createElement('p');
+                let answerStatusClass = '';
+                let userAnswerText = userAnswer !== null ? userAnswer : 'Tidak dijawab';
+
+                if (userAnswer === q.answer) {
+                    answerStatusClass = 'correct';
+                } else if (userAnswer !== null) {
+                    answerStatusClass = 'incorrect';
+                } else {
+                    answerStatusClass = '';
+                }
+
+                detailDiv.innerHTML = `
+                    <strong>${index + 1}. ${q.question}</strong><br>
+                    Jawaban Anda: <span class="${answerStatusClass}">
+                        ${userAnswerText}
+                    </span><br>
+                    Kunci Jawaban: <span class="correct">${q.answer}</span>
+                `;
+                answerDetailsDiv.appendChild(detailDiv);
+            });
+
+            quizForm.style.display = 'none';
+            resultsDiv.style.display = 'block';
+        });
+
+        // Inisialisasi kuis dan cek cooldown saat halaman dimuat
+        window.onload = function() {
+            const lastCompletionTime = localStorage.getItem(lastQuizCompletionKey);
+            if (lastCompletionTime) {
+                const timeElapsed = Date.now() - parseInt(lastCompletionTime);
+                if (timeElapsed < cooldownDuration) {
+                    const remainingTime = cooldownDuration - timeElapsed;
+                    const minutes = Math.floor(remainingTime / (1000 * 60));
+                    const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+
+                    quizForm.style.display = 'none';
+                    timerDisplay.style.display = 'none';
+                    document.getElementById('timeLimitDisplay').style.display = 'none';
+                    const cooldownMessageDiv = document.createElement('div');
+                    cooldownMessageDiv.classList.add('cooldown-message');
+                    cooldownMessageDiv.innerHTML = `
+                        Anda telah menyelesaikan kuis ini. <br>
+                        Silakan coba lagi dalam **${minutes.toString().padStart(2, '0')} menit dan ${seconds.toString().padStart(2, '0')} detik**.
+                    `;
+                    document.querySelector('.container').insertBefore(cooldownMessageDiv, document.getElementById('quizForm'));
+                    return;
+                }
+            }
+            // Jika tidak ada cooldown atau cooldown sudah berakhir, inisialisasi kuis
+            generateQuestions();
+            startTimer();
+        };
+    </script>
+</body>
+</html>
